@@ -3,6 +3,9 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
+
 router.get("/", (req, res) => {
   res.send("hello world");
 });
@@ -53,7 +56,10 @@ router.post("/signin", (req, res) => {
       .compare(password, savedUser.password)
       .then((isMatch) => {
         if (isMatch) {
-          res.send("login successful");
+          // res.send("login successful");
+          //cookie behaviour
+          const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
+          return res.json({ token });
         } else {
           res.send("email or password invalid");
         }
