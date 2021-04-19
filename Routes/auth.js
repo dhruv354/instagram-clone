@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
   res.send("hello world");
 });
 
+//signup route
 router.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -35,3 +36,28 @@ router.post("/signup", (req, res) => {
     .catch((err) => console.log(err));
 });
 module.exports = router;
+
+//signIn route
+
+router.post("/signin", (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(422).json({ error: "please enter both email and password" });
+  }
+  User.findOne({ email: email }).then((savedUser) => {
+    if (!savedUser) {
+      return res.status(422).json({ error: "Invalid username or password" });
+    }
+    bcrypt
+      .compare(password, savedUser.password)
+      .then((isMatch) => {
+        if (isMatch) {
+          res.send("login successful");
+        } else {
+          res.send("email or password invalid");
+        }
+      })
+      .catch((err) => console.log(err));
+  });
+});
