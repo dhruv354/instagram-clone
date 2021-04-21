@@ -28,7 +28,15 @@ router.post("/createpost", Login, (req, res) => {
 /* *****for getting all posts ***** */
 router.get("/allposts", (req, res) => {
   Post.find()
+    .populate("postedBy", "_id name")
     .then((posts) => res.json(posts))
+    .catch((err) => console.log(err));
+});
+
+router.get("/myposts", (req, res) => {
+  Post.find({ postedBy: req.user })
+    .populate("postedBy, _id name")
+    .then((myPost) => res.json({ myPost }))
     .catch((err) => console.log(err));
 });
 
