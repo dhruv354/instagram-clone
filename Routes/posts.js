@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 
 const Login = require("../middlewares/Login");
 const Post = require("../models/post");
+
+//************creating a post**************
 router.post("/createpost", Login, (req, res) => {
   const { title, body } = req.body;
   if (!title || !body) {
@@ -20,6 +22,13 @@ router.post("/createpost", Login, (req, res) => {
   post
     .save()
     .then((result) => res.json({ post: result }))
+    .catch((err) => console.log(err));
+});
+
+/* *****for getting all posts ***** */
+router.get("/allposts", (req, res) => {
+  Post.find()
+    .then((posts) => res.json(posts))
     .catch((err) => console.log(err));
 });
 
