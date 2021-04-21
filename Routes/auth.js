@@ -1,13 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const User = require("../models/user");
 
+const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
+const Login = require("../middlewares/Login");
 
 router.get("/", (req, res) => {
+  // console.log(req.headers);
+
   res.send("hello world");
+});
+
+//protected route
+router.get("/protected", Login, (req, res) => {
+  console.log(req.headers);
+  res.send("protected page");
 });
 
 //signup route
@@ -58,6 +67,7 @@ router.post("/signin", (req, res) => {
         if (isMatch) {
           // res.send("login successful");
           //cookie behaviour
+          // console.log(JWT_SECRET);
           const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
           return res.json({ token });
         } else {
