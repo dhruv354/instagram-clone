@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
+//decrypting passwords related records
 const bcrypt = require("bcryptjs");
 
-const User = require("../models/user");
+//token generation related imports
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
+//middlewares imports
 const Login = require("../middlewares/Login");
+
+//mongoose model imports
+const User = require("../models/user");
+const Post = require("../models/post");
 
 router.get("/", (req, res) => {
   // console.log(req.headers);
