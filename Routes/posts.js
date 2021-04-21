@@ -33,9 +33,9 @@ router.get("/allposts", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/myposts", (req, res) => {
-  Post.find({ postedBy: req.user })
-    .populate("postedBy, _id name")
+router.get("/myposts", Login, (req, res) => {
+  Post.find({ postedBy: req.user._id })
+    .populate("postedBy", "_id name")
     .then((myPost) => res.json({ myPost }))
     .catch((err) => console.log(err));
 });
