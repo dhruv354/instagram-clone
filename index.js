@@ -13,9 +13,15 @@ mongoose.connection.on("connected", () => {
   console.log("connected to mongoDb");
 });
 
+/********************model imports ***************************/
+
+const User = require("./models/user");
+const Post = require("./models/post");
+
 /********************************middlewares**************************** */
 app.use(express.json());
 app.use(router);
+app.use(require("./Routes/posts"));
 
 /**********************listening on server *********************** */
 app.listen(PORT, (err) => {

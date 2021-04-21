@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
   res.send("hello world");
 });
 
-//protected route
+//protected route for testing purpose
 router.get("/protected", Login, (req, res) => {
   console.log(req.headers);
   res.send("protected page");

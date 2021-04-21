@@ -16,9 +16,12 @@ module.exports = (req, res, next) => {
       res.send(401).json({ error: "your token is different " });
     }
     const { _id } = payload;
+
+    //asynchrous request which my take a while so next shouldbe called in this query methodonly
+
     User.findById(_id).then((userData) => {
       req.user = userData;
+      next();
     });
-    next();
   });
 };
