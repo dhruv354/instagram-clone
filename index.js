@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 const { MONGODB } = require("./config");
@@ -20,6 +21,7 @@ const Post = require("./models/post");
 
 /********************************middlewares**************************** */
 app.use(express.json());
+app.use(cors());
 app.use(router);
 app.use(require("./Routes/posts"));
 
