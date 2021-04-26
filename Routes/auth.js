@@ -75,7 +75,8 @@ router.post("/signin", (req, res) => {
           //cookie behaviour
           // console.log(JWT_SECRET);
           const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
-          return res.json({ token });
+          const { _id, name, email } = savedUser;
+          return res.json({ token, user: { _id, name, email } });
         } else {
           res.send("email or password invalid");
         }
