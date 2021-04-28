@@ -8,6 +8,7 @@ const Post = require("../models/post");
 //************creating a post**************
 router.post("/createpost", Login, (req, res) => {
   const { title, body, image } = req.body;
+  console.log(title, body, image);
   if (!title || !body) {
     return res.status(422).json({ error: "please add all the fields" });
   }
@@ -17,7 +18,7 @@ router.post("/createpost", Login, (req, res) => {
   const post = new Post({
     title,
     body,
-    image,
+    photo: image,
     postedBy: req.user,
   });
   post
