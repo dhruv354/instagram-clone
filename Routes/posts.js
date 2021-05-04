@@ -35,11 +35,46 @@ router.get("/allposts", Login, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/myposts", (req, res) => {
+router.get("/myposts", Login, (req, res) => {
   Post.find({ postedBy: req.user._id })
     .populate("postedBy", "_id name")
     .then((myPost) => res.json({ myPost }))
     .catch((err) => console.log(err));
 });
 
+router.put("/like", Login, (req, res) => {
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: { likes: req.secure._id },
+    },
+    {
+      new: true,
+    }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(422).json({ error: err });
+    } else {
+      return res.json(result);
+    }
+  });
+});
+
+router.put("/unlike", Login, (req, res) => {
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $pull: { likes: req.secure._id },
+    },
+    {
+      new: true,
+    }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(422).json({ error: err });
+    } else {
+      return res.json(result);
+    }
+  });
+});
 module.exports = router;
