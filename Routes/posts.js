@@ -46,7 +46,7 @@ router.put("/like", Login, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
     {
-      $push: { likes: req.secure._id },
+      $push: { likes: req.user._id },
     },
     {
       new: true,
@@ -64,7 +64,7 @@ router.put("/unlike", Login, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
     {
-      $pull: { likes: req.secure._id },
+      $pull: { likes: req.user._id },
     },
     {
       new: true,
@@ -76,5 +76,29 @@ router.put("/unlike", Login, (req, res) => {
       return res.json(result);
     }
   });
+});
+
+router.put("/comment", Login, (req, res) => {
+  const comment = {
+    text: req.body.text,
+    postedBy: req.user._id,
+  };
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: { comments: comment },
+    },
+    {
+      new: true,
+    }
+  )
+    .populate("comment.postedBy", "_id name")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        return res.json(result);
+      }
+    });
 });
 module.exports = router;
