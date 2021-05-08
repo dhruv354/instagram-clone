@@ -25,7 +25,7 @@ router.get("/protected", Login, (req, res) => {
   res.send("protected page");
 });
 
-//signup route
+/*****************signup route****************** */
 router.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -55,7 +55,7 @@ router.post("/signup", (req, res) => {
 });
 module.exports = router;
 
-//signIn route
+/****************************signin route********************** */
 
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;

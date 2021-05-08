@@ -27,14 +27,16 @@ router.post("/createpost", Login, (req, res) => {
     .catch((err) => console.log(err));
 });
 
-/* *****for getting all posts ***** */
+/**************for getting all posts ***************/
 router.get("/allposts", Login, (req, res) => {
   Post.find()
     .populate("postedBy", "_id name")
+    .populate("comments.postedBy", "_id name")
     .then((posts) => res.json(posts))
     .catch((err) => console.log(err));
 });
 
+/*************for getting my posts************ */
 router.get("/myposts", Login, (req, res) => {
   Post.find({ postedBy: req.user._id })
     .populate("postedBy", "_id name")
@@ -42,6 +44,7 @@ router.get("/myposts", Login, (req, res) => {
     .catch((err) => console.log(err));
 });
 
+/********************liking a post****************** */
 router.put("/like", Login, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
@@ -60,6 +63,7 @@ router.put("/like", Login, (req, res) => {
   });
 });
 
+/*******************unliking a post********************** */
 router.put("/unlike", Login, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
@@ -78,6 +82,7 @@ router.put("/unlike", Login, (req, res) => {
   });
 });
 
+/*********************commenting on a post*********************** */
 router.put("/comment", Login, (req, res) => {
   const comment = {
     text: req.body.text,
@@ -92,7 +97,8 @@ router.put("/comment", Login, (req, res) => {
       new: true,
     }
   )
-    .populate("comment.postedBy", "_id name")
+    .populate("comments.postedBy", "_id name")
+    .populate("postedBy", "_id name")
     .exec((err, result) => {
       if (err) {
         return res.status(422).json({ error: err });
@@ -101,4 +107,24 @@ router.put("/comment", Login, (req, res) => {
       }
     });
 });
+
+/****************deleting a post ************* */
+router.delete("/delete/:postId", Login, (req, res) => {
+  Post.findOne({ _id: req.params.postId })
+    .populate("postedBy", "_id")
+    .exec((err, post) => {
+      if (!err || !post) {
+        res.status(422).json({ err: err });
+      }
+      if (post.postedBy._id.toString() == req.user._id.toString()) {
+        post
+          .remove()
+          .then((result) => {
+            res.json({ message: "Successfully removed the post" });
+          })
+          .catch((err) => console.log(err));
+      }
+    });
+});
+
 module.exports = router;
