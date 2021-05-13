@@ -24,6 +24,7 @@ app.use(express.json());
 app.use(cors());
 app.use(router);
 app.use(require("./Routes/posts"));
+app.use(require("./Routes/user"));
 
 /**********************listening on server *********************** */
 app.listen(PORT, (err) => {

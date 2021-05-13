@@ -120,7 +120,7 @@ router.delete("/delete/:postId", Login, (req, res) => {
         post
           .remove()
           .then((result) => {
-            res.json({ message: "Successfully removed the post" });
+            res.json(result);
           })
           .catch((err) => console.log(err));
       }
