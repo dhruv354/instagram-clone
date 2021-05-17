@@ -6,7 +6,7 @@ const Login = require("../middlewares/Login");
 const Post = require("../models/post");
 const User = require("../models/user");
 
-router.get("/user/:id", (req, res) => {
+router.get("/user/:id", Login, (req, res) => {
   User.findOne({ _id: req.params.id })
     //we dont want to send password to the frontend
     .select("-password")
