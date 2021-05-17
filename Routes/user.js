@@ -32,9 +32,9 @@ router.get("/user/:id", Login, (req, res) => {
 
 /**********************to follow other users********************/
 router.put("/follow", Login, (req, res) => {
-  const followId = req.body;
+  const { followId } = req.body;
   User.findByIdAndUpdate(
-    followId,
+    { _id: req.body.followId },
     {
       $push: { followers: req.user._id },
     },
@@ -43,15 +43,16 @@ router.put("/follow", Login, (req, res) => {
       if (err) {
         return res.status(422).json({ error: err });
       }
-      User.findOneAndUpdate(
-        req.user._id,
+      User.findByIdAndUpdate(
+        { _id: req.user._id },
         {
-          $push: { following: followId },
+          $push: { following: req.body.followId },
         },
         { new: true }
       )
         .then((result) => res.json(result))
         .catch((err) => {
+          console.log("error in catch block of follow user");
           console.log(err);
           res.status(422).json(err);
         });
