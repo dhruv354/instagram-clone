@@ -50,6 +50,7 @@ router.put("/follow", Login, (req, res) => {
         },
         { new: true }
       )
+        .select('-password')
         .then((result) => res.json(result))
         .catch((err) => {
           console.log("error in catch block of follow user");
@@ -81,6 +82,7 @@ router.put("/unfollow", Login, (req, res) => {
         },
         { new: true }
       )
+        .select('-password')
         .then((result) => res.json(result))
         .catch((err) => {
           console.log(err);
